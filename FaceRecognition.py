@@ -8,13 +8,11 @@ cascade_path = "C:\\Users\\petro\\Desktop\\haarcascade_frontalface_default.xml"
 
 
 def browse_button():
-    # Ο χρήστης επιλέγει την εικόνα Allow user to select a directory and store it in global var
+    # Ο χρήστης επιλέγει την εικόνα απο ένα γραφικό μενού Allow user to select a directory and store it in global var
     # called folder_path
-    global folder_path
     filename = filedialog.askopenfilename()
     folder_path.set(filename)
-    # print(filename)
-    faceRec(filename)
+    face_recognition(filename)
 
 
 root = Tk()
@@ -35,11 +33,12 @@ def face_recognition(filename):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Ο αλγόριθμος ανίχνευσης χρησιμοποιεί ένα κινούμενο παράθυρο για την ανίχνευση αντικειμένων.
+    # Ο scaleFactor αποτρέπει τα πρόσωπα που είναι πιο κοντά στην κάμερα να φαίνονται μεγαλύτερα
     # To minNeighbors ορίζει πόσα αντικείμενα εντοπίζονται κοντά στo τρέχον πριν δηλώσει το πρόσωπο που βρέθηκε.
     # Το minSize δίνει το μέγεθος του κάθε παραθύρου (μλοκ)
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
+        scaleFactor=1.15,
         minNeighbors=5,
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
@@ -48,7 +47,8 @@ def face_recognition(filename):
     # Τυπώνω στην κονσόλα το πόσα πρόσωπα βρέθηκαν
     print("Found {0} faces!".format(len(faces)))
 
-    # Σχεδιάζω ένα ορθογώνιο γύρω απο το πρόσωπο
+    # Σχεδιάζω ένα ορθογώνιο γύρω απο το πρόσωπο.
+    # Tα x και y είναι οι πλευρές του rectangle και τα w και h είναι width και high αντίστοιχα
     for (x, y, w, h) in faces:
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
